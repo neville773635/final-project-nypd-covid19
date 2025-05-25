@@ -66,7 +66,7 @@ This final project taught me how to:
 
 You can find all of my files — including the NYPD Report, COVID-19 Report, R Markdown code, and raw data — in my GitHub repository:
 
-🔗 \[Your GitHub Link Here\]
+
 
 Thank you for watching\!
 
