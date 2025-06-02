@@ -1,0 +1,103 @@
+title: "COVID-19 Global Trends Report – 2022"
+author: "neville"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+## Introduction
+
+This report provides a summary and analysis of global COVID-19 data during the calendar year 2022. The primary data source is the Johns Hopkins University CSSE COVID-19 dataset, which tracks confirmed cases and deaths globally.
+
+The goal is to use reproducible R code to process, clean, analyze, and visualize key trends.
+
+---
+
+## Libraries and Data Loading
+
+```{r setup, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(lubridate)
+{r
+# Load datasets
+confirmed <- read_csv("data/time_series_covid19_confirmed_global.csv")
+deaths <- read_csv("data/time_series_covid19_deaths_global.csv")
+Data Wrangling
+{r
+# Convert wide format to long format
+confirmed_long <- confirmed %>%
+  pivot_longer(cols = starts_with("1"), names_to = "date", values_to = "confirmed") %>%
+  mutate(date = mdy(date))
+
+deaths_long <- deaths %>%
+  pivot_longer(cols = starts_with("1"), names_to = "date", values_to = "deaths") %>%
+  mutate(date = mdy(date))
+
+# Filter for 2022 only
+confirmed_2022 <- confirmed_long %>% filter(year(date) == 2022)
+deaths_2022 <- deaths_long %>% filter(year(date) == 2022)
+
+# Summarize totals globally by date
+daily_confirmed <- confirmed_2022 %>%
+  group_by(date) %>%
+  summarise(total_confirmed = sum(confirmed, na.rm = TRUE))
+
+daily_deaths <- deaths_2022 %>%
+  group_by(date) %>%
+  summarise(total_deaths = sum(deaths, na.rm = TRUE))
+Confirmed Cases Over Time
+{r
+Copy
+
+ggplot(daily_confirmed, aes(x = date, y = total_confirmed)) +
+  geom_line(color = "steelblue") +
+  labs(title = "Daily Confirmed COVID-19 Cases – 2022",
+       x = "Date", y = "Total Confirmed Cases") +
+  theme_minimal()
+Deaths Over Time
+{r
+ggplot(daily_deaths, aes(x = date, y = total_deaths)) +
+  geom_line(color = "firebrick") +
+  labs(title = "Daily COVID-19 Deaths – 2022",
+       x = "Date", y = "Total Deaths") +
+  theme_minimal()
+Conclusion
+This report demonstrates how reproducible R code can be used to summarize and visualize important global health data. The trends shown provide insights for continued pandemic monitoring and preparedness.
+
+Appendix: Code Summary
+The R code in this document includes:
+
+Data import from the Johns Hopkins repository
+
+Reshaping data into a tidy format
+
+Filtering for the 2022 calendar year
+
+Summarizing and plotting daily trends
+
+All code is fully reproducible and integrated within this document.
+
+yaml
+
+---
+
+### ✅ Next Steps:
+
+1. Open **RStudio**.
+2. Create a new R Markdown file:  
+   `File > New File > R Markdown > Save As covid19_report.Rmd`
+3. Paste the entire content above.
+4. Save it inside a folder like: `covid19_project/`
+   - Also create a subfolder: `covid19_project/data/`
+   - Place the two CSV files inside `data/`
+5. Click **Knit → Knit to PDF** (or HTML if you prefer)
+
+---
+
+Want help writing a `README.md` or setting up GitHub to upload this project? I can do that next if you'd like to [finalize your submission setup](f).
+
+
+
+
+
+
+
